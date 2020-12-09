@@ -13,14 +13,7 @@ export default {
           'Receba uma notificação quando houver um novo leilão da Receita Federal',
       },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/laion.ico' },
-      {
-        rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap',
-      },
-    ],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/laion.ico' }],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)

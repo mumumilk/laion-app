@@ -5,6 +5,19 @@
 </template>
 
 <style>
+@font-face {
+  font-family: 'Heebo';
+  src: url('../assets/Heebo-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Heebo';
+  src: url('../assets/Heebo-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-display: swap;
+}
+
 html {
   font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
