@@ -29,6 +29,7 @@ module.exports = {
       boxShadow: ['active'],
       backgroundColor: ['active'],
       translate: ['active'],
+      opacity: ['disabled'],
     },
   },
   plugins: [],

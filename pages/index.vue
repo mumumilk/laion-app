@@ -11,7 +11,10 @@
           class="animate-bouncy"
         />
       </div>
-      <form action="" class="md:w-2/4 flex-col text-center px-3 sm:text-left">
+      <form
+        class="md:w-2/4 flex-col text-center px-3 sm:text-left"
+        @submit.prevent="subscribe"
+      >
         <h1 class="text-4xl text-gray-100 font-bold mb-5 sm:text-6xl">
           Não perca mais os leilões da Receita Federal
         </h1>
@@ -20,17 +23,20 @@
           disponível
         </h2>
         <div
+          v-if="success == null"
           class="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:space-x-3"
         >
           <input
+            v-model="email"
             type="email"
             required
             placeholder="meu@email.com"
-            class="px-3 py-2 rounded-sm"
+            class="px-3 py-2 rounded-sm flex-1"
           />
           <button
             type="submit"
-            class="px-5 py-3 bg-blue-500 text-gray-100 font-bold rounded-sm flex items-center"
+            :disabled="loading"
+            class="px-5 py-3 bg-blue-500 text-gray-100 font-bold rounded-sm flex items-center whitespace-nowrap disabled:opacity-75"
           >
             <svg
               class="h-5 w-5 mr-2"
@@ -47,6 +53,27 @@
               />
             </svg>
             Inscreva-me
+          </button>
+        </div>
+        <div
+          v-else
+          class="w-full rounded-sm flex justify-between px-3 py-3 text-gray-100"
+          :class="[success == true ? 'bg-blue-500' : 'bg-red-500']"
+        >
+          <p>
+            {{
+              success == true
+                ? 'Pronto! Enviamos um e-mail pra você com a confirmação'
+                : 'Erro ao se inscrever'
+            }}
+          </p>
+          <button
+            v-if="success == false"
+            class="underline"
+            type="button"
+            @click.prevent="reset"
+          >
+            Tentar novamente
           </button>
         </div>
       </form>
@@ -67,7 +94,32 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      email: '',
+      success: null,
+      loading: false,
+    };
+  },
+  methods: {
+    subscribe() {
+      this.loading = true;
+      fetch('https://laion-api.azurewebsites.net/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ emailAddress: this.email }),
+      })
+        .then((res) => (this.success = res.ok))
+        .finally(() => (this.loading = false));
+    },
+    reset() {
+      this.success = null;
+    },
+  },
+};
 </script>
 
 <style lang="scss"></style>
