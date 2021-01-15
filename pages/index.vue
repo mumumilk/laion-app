@@ -94,25 +94,33 @@
 </template>
 
 <script>
+import gql from 'graphql-tag';
+
 export default {
   data() {
     return {
       email: '',
       success: null,
       loading: false,
+      editais: '',
     };
   },
   methods: {
     subscribe() {
       this.loading = true;
-      fetch('https://laion-api.azurewebsites.net/api/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ emailAddress: this.email }),
-      })
-        .then((res) => (this.success = res.ok))
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation($email: String!) {
+              subscribe(input: { email: $email })
+            }
+          `,
+          variables: {
+            email: this.email,
+          },
+        })
+        .then(({ data }) => (this.success = data.subscribe))
+        .catch((e) => (this.success = false))
         .finally(() => (this.loading = false));
     },
     reset() {

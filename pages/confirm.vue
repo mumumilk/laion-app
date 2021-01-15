@@ -13,7 +13,23 @@
 </template>
 
 <script>
-export default {}
+import gql from 'graphql-tag';
+
+export default {
+  mounted() {
+    const { token } = this.$route.query;
+    this.$apollo.mutate({
+      mutation: gql`
+        mutation($token: String!) {
+          confirm(input: { token: $token })
+        }
+      `,
+      variables: {
+        token,
+      },
+    });
+  },
+};
 </script>
 
 <style></style>
