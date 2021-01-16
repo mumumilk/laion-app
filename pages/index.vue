@@ -78,10 +78,53 @@
         </div>
       </form>
     </main>
+    <section class="bg-black">
+      <div class="max-w-screen-xl mx-auto text-white py-14 px-3">
+        <h2 class="font-bold text-2xl mb-5">Editais disponíveis</h2>
+        <ul
+          class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        >
+          <li
+            v-for="edital in editais"
+            :key="edital.id"
+            class="flex flex-col rounded bg-dark p-4 w-full"
+          >
+            <a
+              :href="`http://www25.receita.fazenda.gov.br/sle-sociedade/portal/edital/${edital.codigo}`"
+              target="_blank"
+              class="flex justify-between items-center border-b border-blue-500"
+            >
+              {{ edital.codigo }}
+              <svg
+                class="h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </a>
+            <br />
+            <p>
+              {{
+                edital.permitePessoaFisica
+                  ? 'Pessoas físicas e jurídicas'
+                  : 'Pessoas Jurídicas'
+              }}
+            </p>
+            <p>Propostas até {{ edital.dataTerminoPropostas | format }}</p>
+          </li>
+        </ul>
+      </div>
+    </section>
     <footer class="w-full">
-      <div
-        class="max-w-screen-xl mx-auto py-3 border-t border-gray-700 px-3 flex justify-end"
-      >
+      <div class="max-w-screen-xl mx-auto py-3 px-3 flex justify-end">
         <a
           href="https://github.com/mumumilk/laion-app"
           target="_blank"
@@ -104,6 +147,24 @@ export default {
       loading: false,
       editais: '',
     };
+  },
+  mounted() {
+    this.$apollo
+      .query({
+        query: gql`
+          query {
+            editais(filter: { situacao: "5fea75d680b52b00108f1e3d" }) {
+              data {
+                id
+                codigo
+                permitePessoaFisica
+                dataTerminoPropostas
+              }
+            }
+          }
+        `,
+      })
+      .then(({ data }) => (this.editais = data.editais.data));
   },
   methods: {
     subscribe() {
